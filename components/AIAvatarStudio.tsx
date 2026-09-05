@@ -18,7 +18,7 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [amplitude, setAmplitude] = useState(0);
   const [displayText, setDisplayText] = useState(
-    "Hey there! I'm SAM. I'm a creative full-stack developer crafting immersive web apps and 3D experiences. Click any topic below or ask me a question!"
+    "Hi, I'm Sameer Das! Software developer with experience in full-stack web development and deployment. Click 'My Story' to hear more!"
   );
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [userQuery, setUserQuery] = useState("");
@@ -100,28 +100,23 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
     setActiveTopic(topic);
 
     let script = "";
-    let targetSection = "";
 
     switch (topic) {
       case "story":
         script =
-          "I'm SAM, a full-stack engineer with over 4 years of experience. I bridge clean software architecture with cutting-edge 3D interactive design. I love building tools that feel magical to use!";
-        targetSection = "about";
+          "Hi, I’m Sameer Das, a software developer with experience in full-stack web development and deployment. I work with technologies such as JavaScript, Node.js, Next.js, PHP, MySQL, Redis, Git, AWS, Linux, and PM2. I’m particularly interested in building real-time applications, cloud deployment, CI/CD, and improving application performance and scalability. I’m also continuously learning technologies like Docker, AWS, and DevOps to strengthen my development and deployment skills.";
         break;
       case "stack":
         script =
-          "My core toolkit is Next.js, React, and TypeScript on the front, Three.js and WebGL for 3D graphics, with Node.js, PostgreSQL, and AWS powering the backend.";
-        targetSection = "about";
+          "My core stack includes JavaScript, Node.js, Next.js, PHP, MySQL, Redis, Git, AWS, Linux, and PM2, with hands-on focus on Docker, DevOps, and scalable architectures.";
         break;
       case "projects":
         script =
-          "I've built 6 featured applications ranging from e-commerce platforms to WebGL particle worlds and AI productivity tools. Let's inspect the Projects section!";
-        targetSection = "projects";
+          "I've built featured full-stack applications with real-time performance and solid cloud deployments. Feel free to explore the Projects section below!";
         break;
       case "hire":
         script =
-          "I'm currently available for freelance projects, technical consulting, and full-time software engineering roles. Let's connect down in the contact section!";
-        targetSection = "contact";
+          "I'm open for software development roles, freelance projects, and DevOps opportunities. Feel free to reach out via the contact section below!";
         break;
       default:
         script =
@@ -129,11 +124,7 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
         break;
     }
 
-    speakText(script, () => {
-      if (targetSection) {
-        document.getElementById(targetSection)?.scrollIntoView({ behavior: "smooth" });
-      }
-    });
+    speakText(script);
   };
 
   const handleAskQuestion = (e: React.FormEvent) => {
@@ -143,39 +134,48 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
     setIsThinking(true);
     const q = userQuery.toLowerCase().trim();
     let reply = "";
-    let targetSection = "";
 
-    if (q.includes("who are you") || q.includes("who is sam") || q.includes("name") || q.includes("about you")) {
+    if (
+      q.includes("who are you") ||
+      q.includes("who is sameer") ||
+      q.includes("who is sam") ||
+      q.includes("name") ||
+      q.includes("about you")
+    ) {
       reply =
-        "I'm SAM! A creative full-stack developer passionate about Next.js, Three.js, and crafting seamless digital experiences.";
-      targetSection = "about";
+        "Hi, I’m Sameer Das, a software developer with experience in full-stack web development and deployment across JavaScript, Node.js, Next.js, PHP, MySQL, Redis, AWS, and Linux.";
     } else if (q.includes("project") || q.includes("work") || q.includes("portfolio")) {
       reply =
-        "SAM has built 6 featured full-stack applications, from interactive 3D WebGL showcases to full e-commerce systems. Let me take you to the Projects section!";
-      targetSection = "projects";
-    } else if (q.includes("skill") || q.includes("tech") || q.includes("stack") || q.includes("language")) {
+        "Sameer has built robust full-stack applications, with real-time capabilities and seamless cloud deployments.";
+    } else if (
+      q.includes("skill") ||
+      q.includes("tech") ||
+      q.includes("stack") ||
+      q.includes("language") ||
+      q.includes("devops")
+    ) {
       reply =
-        "SAM specializes in React, Next.js, TypeScript, Three.js, Node.js, and cloud systems. Let's look at the Skills section!";
-      targetSection = "about";
-    } else if (q.includes("hire") || q.includes("contact") || q.includes("email") || q.includes("freelance") || q.includes("available")) {
+        "Sameer works with JavaScript, Node.js, Next.js, PHP, MySQL, Redis, Git, AWS, Linux, PM2, and is actively learning Docker and DevOps.";
+    } else if (
+      q.includes("hire") ||
+      q.includes("contact") ||
+      q.includes("email") ||
+      q.includes("freelance") ||
+      q.includes("available")
+    ) {
       reply =
-        "SAM is currently open for freelance projects and full-time roles! Let's head down to the contact section.";
-      targetSection = "contact";
+        "Sameer is currently open for development roles, freelance opportunities, and collaborative engineering projects. Send a message below!";
     } else if (q.includes("hi") || q.includes("hello") || q.includes("hey")) {
       reply =
-        "Hey! Great to meet you. Feel free to click any of the story topics below or ask me any question about my work!";
+        "Hey! Great to meet you. Feel free to click 'My Story' to hear about my background or ask me any question!";
     } else {
       reply =
-        "Thanks for asking! As a developer, I specialize in full-stack engineering and interactive 3D graphics. Explore the projects below or get in touch with me directly!";
+        "Thanks for asking! As a software developer, I specialize in full-stack development, cloud deployment, and real-time systems. Explore my projects below or get in touch!";
     }
 
     setTimeout(() => {
       setIsThinking(false);
-      speakText(reply, () => {
-        if (targetSection) {
-          document.getElementById(targetSection)?.scrollIntoView({ behavior: "smooth" });
-        }
-      });
+      speakText(reply);
       setUserQuery("");
     }, 250);
   };
@@ -201,7 +201,7 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
           <div className="flex items-center gap-2">
             <span className={`w-2.5 h-2.5 rounded-full ${isSpeaking ? "bg-[var(--accent-pink)] animate-ping" : "bg-emerald-400 animate-pulse"}`} />
             <span className="font-mono text-xs font-bold text-white tracking-wider uppercase">
-              SAM • AI Digital Avatar
+              Sameer Das • AI Digital Avatar
             </span>
           </div>
 
@@ -283,7 +283,7 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
               className="relative z-10"
             >
               <div
-                onClick={() => speakText("Hey! You clicked my avatar photo. I'm SAM! Click any of the topics below to hear all about me.")}
+                onClick={() => speakText("Hey! You clicked my avatar photo. I'm Sameer Das! Click 'My Story' to hear all about me.")}
                 className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full p-1 cursor-pointer group shadow-2xl transition-all"
                 style={{
                   background: isSpeaking
@@ -297,7 +297,7 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
                 <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white/20 bg-black">
                   <img
                     src={avatarImage}
-                    alt="SAM AI Avatar"
+                    alt="Sameer Das AI Avatar"
                     className={`w-full h-full object-cover transition-all duration-700 ${
                       isSpeaking ? "scale-105 contrast-110" : "group-hover:scale-105"
                     }`}
@@ -317,7 +317,7 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
                   ) : (
                     <>
                       <span>🎙️</span>
-                      <span>SAM AI</span>
+                      <span>Sameer AI</span>
                     </>
                   )}
                 </div>
@@ -352,7 +352,7 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
                   isSpeaking={isSpeaking}
                   amplitude={amplitude}
                   mousePosition={mousePosition}
-                  onAvatarClick={() => speakText("Hey! You clicked the 3D model! Try clicking the topics below or ask me anything.")}
+                  onAvatarClick={() => speakText("Hey! You clicked the 3D model! Try clicking 'My Story' or ask me anything.")}
                 />
                 <Environment preset="city" />
               </Suspense>
@@ -446,7 +446,7 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
             type="text"
             value={userQuery}
             onChange={(e) => setUserQuery(e.target.value)}
-            placeholder="Ask SAM anything..."
+            placeholder="Ask Sameer anything..."
             className="flex-1 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-[var(--accent-pink)] placeholder-gray-500 transition-colors"
           />
           <button

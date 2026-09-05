@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Developer Portfolio | Creative Full-Stack Developer",
   description: "Modern portfolio showcasing cutting-edge web development with React, Three.js, and immersive 3D experiences. Specializing in creative development and interactive design.",
   keywords: ["web developer", "full-stack", "three.js", "react", "next.js", "3d web", "portfolio"],
-  authors: [{ name: "SAM" }],
+  authors: [{ name: "Sameer Das" }],
   openGraph: {
     title: "Developer Portfolio | Creative Full-Stack Developer",
     description: "Modern portfolio showcasing cutting-edge web development",

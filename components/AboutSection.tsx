@@ -9,14 +9,13 @@ import SkillsVisualization from "./SkillsVisualization";
 import Timeline from "./Timeline";
 import { fadeInUp, fadeInLeft, staggerContainer } from "@/lib/animations";
 
-// Sample data (will be replaced with data from data/about.json)
 const skills = [
-  { name: "React / Next.js", level: 95, category: "Frontend" },
-  { name: "TypeScript", level: 90, category: "Language" },
-  { name: "Three.js / WebGL", level: 85, category: "3D Graphics" },
-  { name: "Node.js", level: 88, category: "Backend" },
-  { name: "Python", level: 82, category: "Language" },
-  { name: "AWS / Cloud", level: 80, category: "DevOps" },
+  { name: "JavaScript / TypeScript", level: 92, category: "Language" },
+  { name: "Node.js / Next.js", level: 90, category: "Full-Stack" },
+  { name: "PHP / MySQL / Redis", level: 85, category: "Backend & DB" },
+  { name: "AWS / Linux / PM2", level: 84, category: "Cloud & Ops" },
+  { name: "Docker / CI/CD / DevOps", level: 80, category: "DevOps" },
+  { name: "Git / Version Control", level: 92, category: "Workflow" },
 ];
 
 const timeline = [
@@ -120,28 +119,37 @@ export default function AboutSection() {
               variants={fadeInUp}
               className="text-2xl sm:text-3xl md:text-4xl font-bold text-white"
             >
-              Creative Developer & Designer
+              Sameer Das — Software Developer
             </motion.h3>
 
             <motion.p variants={fadeInUp} className="text-base sm:text-lg text-gray-300 leading-relaxed">
-              I'm a full-stack developer specializing in building exceptional digital experiences.
-              Currently focused on creating accessible, human-centered products with modern web
-              technologies.
+              Hi, I’m Sameer Das, a software developer with experience in full-stack web development and deployment.
+              I work with technologies such as <strong className="text-white">JavaScript, Node.js, Next.js, PHP, MySQL, Redis, Git, AWS, Linux, and PM2</strong>.
             </motion.p>
 
             <motion.p variants={fadeInUp} className="text-base sm:text-lg text-gray-300 leading-relaxed">
-              With a passion for 3D graphics, animations, and interactive design, I bring ideas to
-              life through code. I believe in the power of technology to create meaningful
-              connections and solve real-world problems.
+              I’m particularly interested in building real-time applications, cloud deployment, CI/CD, and improving application performance and scalability.
             </motion.p>
 
             <motion.p variants={fadeInUp} className="text-base sm:text-lg text-gray-300 leading-relaxed">
-              When I'm not coding, you'll find me exploring new technologies, contributing to
-              open-source projects, or experimenting with creative coding and generative art.
+              I’m also continuously learning technologies like <strong className="text-white">Docker, AWS, and DevOps</strong> to strengthen my development and deployment skills.
             </motion.p>
 
             <motion.div variants={fadeInUp} className="flex flex-wrap gap-2 sm:gap-3 pt-4">
-              {["WebGL", "React", "Three.js", "TypeScript", "Next.js", "GSAP"].map((tech) => (
+              {[
+                "JavaScript",
+                "Node.js",
+                "Next.js",
+                "PHP",
+                "MySQL",
+                "Redis",
+                "AWS",
+                "Docker",
+                "Linux",
+                "PM2",
+                "CI/CD",
+                "Git",
+              ].map((tech) => (
                 <span
                   key={tech}
                   className="px-3 py-1.5 sm:px-4 sm:py-2 glass rounded-full text-xs sm:text-sm font-semibold hover:shadow-[0_0_20px_rgba(255,31,143,0.3)] transition-all cursor-default"

@@ -66,28 +66,28 @@ export default function Hero3D() {
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass border border-white/10 text-xs font-mono text-[var(--accent-pink)] uppercase tracking-wider mb-6"
             >
               <span className="w-2 h-2 rounded-full bg-[var(--accent-pink)] animate-ping" />
-              Creative Full-Stack Developer
+              Full-Stack Software Developer
             </motion.div>
 
             <motion.h1
               variants={fadeInUp}
               className="text-5xl sm:text-6xl md:text-7xl xl:text-8xl font-bold mb-3 sm:mb-4 leading-tight tracking-tight"
             >
-              <span className="gradient-text">Developer</span>
+              <span className="gradient-text">Sameer Das</span>
             </motion.h1>
 
             <motion.h2
               variants={fadeInUp}
-              className="text-3xl sm:text-4xl md:text-5xl font-light text-gray-300 mb-4 sm:mb-6 tracking-tight"
+              className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-300 mb-4 sm:mb-6 tracking-tight"
             >
-              Portfolio
+              Software Developer &amp; Cloud Specialist
             </motion.h2>
 
             <motion.p
               variants={fadeInUp}
               className="text-base sm:text-lg text-gray-300 max-w-lg mb-8 leading-relaxed"
             >
-              Crafting immersive digital experiences, high-performance web applications, and interactive 3D graphics.
+              Full-stack developer building real-time applications, cloud deployments, and scalable high-performance web systems.
             </motion.p>
 
             <motion.div
