@@ -1,26 +1,175 @@
 @import "tailwindcss";
+@source "../components";
+@source "../app";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0014;
+  --foreground: #ededed;
+  --electric-blue: #ff1f8f;
+  --electric-purple: #6b1fb0;
+  --accent-pink: #ff1f8f;
+  --accent-magenta: #d946ef;
+  --deep-purple: #4c0b7a;
+  --dark-navy: #0a0014;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-electric-blue: var(--electric-blue);
+  --color-electric-purple: var(--electric-purple);
+  --color-accent-pink: var(--accent-pink);
+  --color-accent-magenta: var(--accent-magenta);
+  --color-deep-purple: var(--deep-purple);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* Custom colors */
+  --color-dark-900: #0a0014;
+  --color-dark-800: #1a0028;
+  --color-dark-700: #2a0040;
+  --color-dark-600: #3d0066;
+  
+  /* Gradients */
+  --gradient-electric: linear-gradient(135deg, #ff1f8f 0%, #6b1fb0 100%);
+  --gradient-electric-radial: radial-gradient(circle at 50% 50%, #ff1f8f 0%, #6b1fb0 100%);
+  --gradient-purple-pink: linear-gradient(135deg, #4c0b7a 0%, #d946ef 100%);
+  
+  /* Shadows */
+  --shadow-glow-blue: 0 0 30px rgba(255, 31, 143, 0.3);
+  --shadow-glow-purple: 0 0 30px rgba(107, 31, 176, 0.3);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.37);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body, a, button, [role="button"], input, textarea {
+    cursor: none;
+  }
+}
+
+/* Noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark-900);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent-pink), var(--electric-purple));
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-pink);
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-glass);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: var(--gradient-electric);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 31, 143, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(217, 70, 239, 0.6);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes rotate-gradient {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 3s linear infinite;
+}
+
+.animate-rotate-gradient {
+  animation: rotate-gradient 10s linear infinite;
+}
+
+/* Selection */
+::selection {
+  background: var(--accent-pink);
+  color: var(--background);
+}
+
+::-moz-selection {
+  background: var(--accent-pink);
+  color: var(--background);
 }

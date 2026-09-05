@@ -1,0 +1,114 @@
+{
+  "bio": [
+    "I'm a full-stack developer specializing in building exceptional digital experiences. Currently focused on creating accessible, human-centered products with modern web technologies.",
+    "With a passion for 3D graphics, animations, and interactive design, I bring ideas to life through code. I believe in the power of technology to create meaningful connections and solve real-world problems.",
+    "When I'm not coding, you'll find me exploring new technologies, contributing to open-source projects, or experimenting with creative coding and generative art."
+  ],
+  "skills": [
+    {
+      "name": "React / Next.js",
+      "level": 95,
+      "category": "Frontend"
+    },
+    {
+      "name": "TypeScript",
+      "level": 90,
+      "category": "Language"
+    },
+    {
+      "name": "Three.js / WebGL",
+      "level": 85,
+      "category": "3D Graphics"
+    },
+    {
+      "name": "Node.js",
+      "level": 88,
+      "category": "Backend"
+    },
+    {
+      "name": "Python",
+      "level": 82,
+      "category": "Language"
+    },
+    {
+      "name": "AWS / Cloud",
+      "level": 80,
+      "category": "DevOps"
+    },
+    {
+      "name": "PostgreSQL / MongoDB",
+      "level": 85,
+      "category": "Database"
+    },
+    {
+      "name": "Docker / Kubernetes",
+      "level": 78,
+      "category": "DevOps"
+    },
+    {
+      "name": "GraphQL",
+      "level": 83,
+      "category": "API"
+    },
+    {
+      "name": "React Native",
+      "level": 80,
+      "category": "Mobile"
+    }
+  ],
+  "timeline": [
+    {
+      "year": "2024",
+      "title": "Senior Full-Stack Developer",
+      "organization": "Tech Company Inc.",
+      "description": "Leading development of cutting-edge web applications with focus on performance and user experience. Architecting scalable solutions using microservices and cloud infrastructure."
+    },
+    {
+      "year": "2022",
+      "title": "Full-Stack Developer",
+      "organization": "Digital Agency",
+      "description": "Built responsive web applications and interactive experiences for major clients using modern frameworks. Collaborated with designers and product managers to deliver high-quality products."
+    },
+    {
+      "year": "2021",
+      "title": "Frontend Developer",
+      "organization": "Startup Ventures",
+      "description": "Developed user interfaces for multiple SaaS products. Implemented complex animations and 3D visualizations using React Three Fiber and GSAP."
+    },
+    {
+      "year": "2020",
+      "title": "Bachelor's in Computer Science",
+      "organization": "University Name",
+      "description": "Graduated with honors, specializing in web technologies and interactive media. Completed thesis on real-time rendering techniques for web applications."
+    }
+  ],
+  "technologies": [
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Three.js",
+    "WebGL",
+    "GSAP",
+    "Framer Motion",
+    "Node.js",
+    "Python",
+    "PostgreSQL",
+    "MongoDB",
+    "Redis",
+    "Docker",
+    "AWS",
+    "GraphQL",
+    "REST API",
+    "Git",
+    "CI/CD"
+  ],
+  "location": "San Francisco, CA",
+  "email": "your.email@example.com",
+  "availability": "Open for freelance & full-time opportunities",
+  "social": {
+    "github": "https://github.com/yourusername",
+    "linkedin": "https://linkedin.com/in/yourusername",
+    "twitter": "https://twitter.com/yourusername",
+    "email": "mailto:your.email@example.com"
+  }
+}

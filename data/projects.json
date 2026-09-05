@@ -1,0 +1,128 @@
+[
+  {
+    "id": "1",
+    "title": "E-Commerce Platform",
+    "description": "A full-stack e-commerce platform with real-time inventory management and AI-powered recommendations.",
+    "longDescription": "Built a comprehensive e-commerce platform featuring real-time inventory tracking, personalized product recommendations using machine learning, secure payment processing, and an intuitive admin dashboard for managing products, orders, and analytics.",
+    "image": "",
+    "tags": ["Next.js", "TypeScript", "PostgreSQL", "Stripe", "TensorFlow", "Redis"],
+    "liveUrl": "https://example.com",
+    "githubUrl": "https://github.com/yourusername/ecommerce",
+    "featured": true,
+    "category": "Web App",
+    "problem": "Small businesses struggle to compete with major e-commerce platforms due to lack of advanced features like personalized recommendations and real-time inventory management. This creates a gap in customer experience and operational efficiency.",
+    "solution": "Developed a scalable platform that combines modern web technologies with machine learning to provide enterprise-level features at an accessible price point. Implemented real-time WebSocket connections for inventory updates, integrated Stripe for secure payments, and used TensorFlow.js for client-side product recommendations.",
+    "results": [
+      "Increased conversion rate by 35% through personalized recommendations",
+      "Reduced inventory discrepancies by 90% with real-time tracking",
+      "Processed over $100K in transactions in first 3 months",
+      "Achieved 99.9% uptime with optimized caching strategies"
+    ],
+    "images": []
+  },
+  {
+    "id": "2",
+    "title": "3D Portfolio Showcase",
+    "description": "An immersive 3D portfolio website featuring WebGL animations and interactive particle systems.",
+    "longDescription": "Created an award-winning portfolio website leveraging React Three Fiber and custom WebGL shaders to create a cinematic browsing experience. Features include dynamic lighting, physics-based animations, and responsive 3D interactions.",
+    "image": "",
+    "tags": ["React Three Fiber", "WebGL", "GSAP", "Three.js", "Framer Motion"],
+    "liveUrl": "https://example.com",
+    "githubUrl": "https://github.com/yourusername/3d-portfolio",
+    "featured": true,
+    "category": "3D Experience",
+    "problem": "Traditional portfolio websites fail to showcase technical creativity and often blend into the sea of similar designs, making it difficult for developers to stand out in a competitive job market.",
+    "solution": "Built an interactive 3D experience that demonstrates both technical proficiency and creative vision. Utilized React Three Fiber for declarative 3D rendering, implemented custom GLSL shaders for unique visual effects, and optimized performance to maintain 60fps across devices.",
+    "results": [
+      "Featured on Awwwards Site of the Day",
+      "Achieved 95+ Lighthouse performance score",
+      "Generated 300% more portfolio inquiries",
+      "Viewed by over 50,000 unique visitors in first month"
+    ],
+    "images": []
+  },
+  {
+    "id": "3",
+    "title": "AI Task Manager",
+    "description": "Smart task management app with AI-powered priority suggestions and natural language processing.",
+    "longDescription": "An intelligent task management application that uses natural language processing to understand task descriptions and automatically suggest priorities, deadlines, and categorizations. Integrated with calendar APIs for seamless scheduling.",
+    "image": "",
+    "tags": ["React", "Node.js", "OpenAI", "MongoDB", "Express"],
+    "liveUrl": "https://example.com",
+    "githubUrl": "https://github.com/yourusername/ai-tasks",
+    "featured": false,
+    "category": "Web App",
+    "problem": "Users waste time manually organizing and prioritizing tasks, often leading to missed deadlines and poor time management. Traditional task managers lack intelligence to understand context and urgency.",
+    "solution": "Integrated OpenAI's GPT API to analyze task descriptions and automatically extract important information like deadlines, priority levels, and categories. Built a learning system that adapts to user preferences over time, improving accuracy of suggestions.",
+    "results": [
+      "Reduced task organization time by 60%",
+      "Improved deadline adherence by 45%",
+      "Processed over 100,000 AI-powered task analyses",
+      "4.8/5 average user rating on product hunt"
+    ],
+    "images": []
+  },
+  {
+    "id": "4",
+    "title": "Real-Time Collaboration Tool",
+    "description": "Collaborative whiteboard with real-time synchronization and WebRTC video conferencing.",
+    "longDescription": "A web-based collaboration platform featuring an infinite canvas whiteboard, real-time cursor tracking, integrated video/audio chat, and document sharing capabilities. Built to support distributed teams working on creative projects.",
+    "image": "",
+    "tags": ["WebRTC", "Socket.io", "Canvas API", "React", "Redis"],
+    "liveUrl": "https://example.com",
+    "githubUrl": "",
+    "featured": false,
+    "category": "Web App",
+    "problem": "Remote teams struggle with effective brainstorming and visual collaboration, relying on multiple disconnected tools that interrupt creative flow and make synchronous collaboration difficult.",
+    "solution": "Created an all-in-one platform using WebSockets for real-time data synchronization and WebRTC for peer-to-peer video communication. Implemented operational transformation for conflict-free collaborative editing and optimized canvas rendering for smooth performance with hundreds of elements.",
+    "results": [
+      "Used by 50+ remote teams daily",
+      "Average session duration of 45 minutes",
+      "Sub-100ms latency for real-time updates",
+      "Successfully hosted sessions with up to 20 concurrent users"
+    ],
+    "images": []
+  },
+  {
+    "id": "5",
+    "title": "Fitness Tracking Dashboard",
+    "description": "Mobile-first fitness app with workout tracking, progress analytics, and social features.",
+    "longDescription": "A comprehensive fitness tracking application that helps users log workouts, track progress over time, set goals, and connect with friends. Features beautiful data visualizations and integrates with wearable devices.",
+    "image": "",
+    "tags": ["React Native", "Firebase", "Chart.js", "Redux", "HealthKit"],
+    "liveUrl": "",
+    "githubUrl": "https://github.com/yourusername/fitness-tracker",
+    "featured": false,
+    "category": "Mobile App",
+    "problem": "Existing fitness apps are either too complex for beginners or too basic for serious athletes, and most lack the social motivation factor that helps users maintain consistency with their fitness goals.",
+    "solution": "Designed an intuitive mobile experience that scales from beginner to advanced users, with customizable workout templates, progress tracking, and social features. Integrated with HealthKit and Google Fit for automatic data syncing from wearables.",
+    "results": [
+      "10,000+ downloads in first 2 months",
+      "Users logged 50,000+ workouts",
+      "85% user retention after 30 days",
+      "Average 4.6-star rating on app stores"
+    ],
+    "images": []
+  },
+  {
+    "id": "6",
+    "title": "Cryptocurrency Dashboard",
+    "description": "Real-time crypto portfolio tracker with advanced charting and market analysis tools.",
+    "longDescription": "A sophisticated cryptocurrency portfolio management tool featuring real-time price updates, interactive charts, portfolio analytics, and market sentiment analysis. Supports multiple exchanges and wallets.",
+    "image": "",
+    "tags": ["Vue.js", "D3.js", "WebSocket", "Python", "FastAPI"],
+    "liveUrl": "https://example.com",
+    "githubUrl": "https://github.com/yourusername/crypto-dashboard",
+    "featured": true,
+    "category": "Web App",
+    "problem": "Crypto investors need to manually check multiple exchanges and wallets to get a complete view of their portfolio, making it difficult to make informed trading decisions and track overall performance.",
+    "solution": "Built a unified dashboard that aggregates data from multiple sources via APIs and WebSocket connections. Implemented advanced charting with D3.js for technical analysis, and created a Python backend for real-time data processing and portfolio calculations.",
+    "results": [
+      "Tracks $5M+ in cryptocurrency assets",
+      "Real-time updates with sub-second latency",
+      "Supports 100+ cryptocurrencies across 10+ exchanges",
+      "Featured in crypto community newsletters"
+    ],
+    "images": []
+  }
+]
