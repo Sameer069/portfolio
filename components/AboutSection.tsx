@@ -3,48 +3,18 @@
 import { Suspense, useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PerspectiveCamera, Environment } from "@react-three/drei";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import Rotating3DObject from "./Rotating3DObject";
 import SkillsVisualization from "./SkillsVisualization";
 import Timeline from "./Timeline";
 import { fadeInUp, fadeInLeft, staggerContainer } from "@/lib/animations";
-
-const skills = [
-  { name: "JavaScript / TypeScript", level: 92, category: "Language" },
-  { name: "Node.js / Next.js", level: 90, category: "Full-Stack" },
-  { name: "PHP / MySQL / Redis", level: 85, category: "Backend & DB" },
-  { name: "AWS / Linux / PM2", level: 84, category: "Cloud & Ops" },
-  { name: "Docker / CI/CD / DevOps", level: 80, category: "DevOps" },
-  { name: "Git / Version Control", level: 92, category: "Workflow" },
-];
-
-const timeline = [
-  {
-    year: "2024",
-    title: "Senior Full-Stack Developer",
-    organization: "Tech Company Inc.",
-    description:
-      "Leading development of cutting-edge web applications with focus on performance and user experience.",
-  },
-  {
-    year: "2022",
-    title: "Full-Stack Developer",
-    organization: "Digital Agency",
-    description:
-      "Built responsive web applications and interactive experiences for major clients using modern frameworks.",
-  },
-  {
-    year: "2020",
-    title: "Bachelor's in Computer Science",
-    organization: "University Name",
-    description:
-      "Graduated with honors, specializing in web technologies and interactive media.",
-  },
-];
+import aboutData from "@/data/about.json";
 
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  const { bio, skills, timeline, technologies } = aboutData;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -101,7 +71,7 @@ export default function AboutSection() {
             About Me
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto px-4">
-            Passionate about creating immersive digital experiences that push the boundaries of web technology
+            Building scalable web applications with modern technologies
           </p>
         </motion.div>
 
@@ -119,37 +89,21 @@ export default function AboutSection() {
               variants={fadeInUp}
               className="text-2xl sm:text-3xl md:text-4xl font-bold text-white"
             >
-              Sameer Das — Software Developer
+              Sameer Das — Full-Stack Developer
             </motion.h3>
 
-            <motion.p variants={fadeInUp} className="text-base sm:text-lg text-gray-300 leading-relaxed">
-              Hi, I’m Sameer Das, a software developer with experience in full-stack web development and deployment.
-              I work with technologies such as <strong className="text-white">JavaScript, Node.js, Next.js, PHP, MySQL, Redis, Git, AWS, Linux, and PM2</strong>.
-            </motion.p>
-
-            <motion.p variants={fadeInUp} className="text-base sm:text-lg text-gray-300 leading-relaxed">
-              I’m particularly interested in building real-time applications, cloud deployment, CI/CD, and improving application performance and scalability.
-            </motion.p>
-
-            <motion.p variants={fadeInUp} className="text-base sm:text-lg text-gray-300 leading-relaxed">
-              I’m also continuously learning technologies like <strong className="text-white">Docker, AWS, and DevOps</strong> to strengthen my development and deployment skills.
-            </motion.p>
+            {bio.map((paragraph, index) => (
+              <motion.p
+                key={index}
+                variants={fadeInUp}
+                className="text-base sm:text-lg text-gray-300 leading-relaxed"
+              >
+                {paragraph}
+              </motion.p>
+            ))}
 
             <motion.div variants={fadeInUp} className="flex flex-wrap gap-2 sm:gap-3 pt-4">
-              {[
-                "JavaScript",
-                "Node.js",
-                "Next.js",
-                "PHP",
-                "MySQL",
-                "Redis",
-                "AWS",
-                "Docker",
-                "Linux",
-                "PM2",
-                "CI/CD",
-                "Git",
-              ].map((tech) => (
+              {technologies.slice(0, 16).map((tech) => (
                 <span
                   key={tech}
                   className="px-3 py-1.5 sm:px-4 sm:py-2 glass rounded-full text-xs sm:text-sm font-semibold hover:shadow-[0_0_20px_rgba(255,31,143,0.3)] transition-all cursor-default"

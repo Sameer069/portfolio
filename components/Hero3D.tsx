@@ -1,18 +1,41 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import { PerspectiveCamera, Environment } from "@react-three/drei";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import AIAvatarStudio from "./AIAvatarStudio";
-import ParticleField from "./ParticleField";
-import FloatingShapes from "./FloatingShapes";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
+
+// Dynamic imports for all 3D components
+const Canvas = dynamic(
+  () => import("@react-three/fiber").then((mod) => mod.Canvas),
+  { ssr: false }
+);
+
+const PerspectiveCamera = dynamic(
+  () => import("@react-three/drei").then((mod) => mod.PerspectiveCamera),
+  { ssr: false }
+);
+
+const Environment = dynamic(
+  () => import("@react-three/drei").then((mod) => mod.Environment),
+  { ssr: false }
+);
+
+const AIAvatarStudio = dynamic(() => import("./AIAvatarStudio"), { ssr: false });
+const ParticleField = dynamic(() => import("./ParticleField"), { ssr: false });
+const FloatingShapes = dynamic(() => import("./FloatingShapes"), { ssr: false });
 
 export default function Hero3D() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       const x = (e.clientX / window.innerWidth) * 2 - 1;
       const y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -24,7 +47,7 @@ export default function Hero3D() {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
+  }, [isMounted]);
 
   const scrollToProjects = () => {
     document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
@@ -39,19 +62,21 @@ export default function Hero3D() {
       id="hero"
       className="relative w-full min-h-screen overflow-hidden"
     >
-      <div className="absolute inset-0 z-0">
-        <Canvas>
-          <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[10, 10, 5]} intensity={1} />
-          <pointLight position={[-10, -10, -5]} color="#6b1fb0" intensity={0.5} />
-          <Suspense fallback={null}>
-            <ParticleField mousePosition={mousePosition} count={2000} />
-            <FloatingShapes mousePosition={mousePosition} count={15} />
+      {isMounted && (
+        <div className="absolute inset-0 z-0">
+          <Canvas>
+            <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[10, 10, 5]} intensity={1} />
+            <pointLight position={[-10, -10, -5]} color="#6b1fb0" intensity={0.5} />
+            <Suspense fallback={null}>
+              <ParticleField mousePosition={mousePosition} count={2000} />
+              <FloatingShapes mousePosition={mousePosition} count={15} />
             <Environment preset="city" />
-          </Suspense>
-        </Canvas>
-      </div>
+            </Suspense>
+          </Canvas>
+        </div>
+      )}
 
       <div className="relative z-10 min-h-screen w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex items-center pt-24 pb-16">
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 items-center gap-10 lg:gap-8">
@@ -128,27 +153,7 @@ export default function Hero3D() {
         </div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-6 sm:bottom-8 md:bottom-10 left-1/2 transform -translate-x-1/2 z-10"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-2"
-        >
-          <span className="text-gray-400 text-xs sm:text-sm uppercase tracking-wider">Scroll</span>
-          <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-gray-400 rounded-full flex items-start justify-center p-1.5 sm:p-2">
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-white rounded-full"
-            />
-          </div>
-        </motion.div>
-      </motion.div>
+   
     </section>
   );
 }

@@ -25,8 +25,6 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
   const [userQuery, setUserQuery] = useState("");
   const [isThinking, setIsThinking] = useState(false);
   const [activeTopic, setActiveTopic] = useState<string>("intro");
-  const [isListening, setIsListening] = useState(false);
-  const [blockedUrl, setBlockedUrl] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<string[]>([
     "Tell me about yourself",
     "Show me your projects",
@@ -37,98 +35,9 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
   const typewriterRef = useRef<TypewriterEffect | null>(null);
   const amplitudeIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     speechHandlerRef.current = new SpeechHandler();
-
-    // Initialize Speech Recognition
-    if (typeof window !== 'undefined') {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (SpeechRecognition) {
-        recognitionRef.current = new SpeechRecognition();
-        recognitionRef.current.continuous = false;
-        recognitionRef.current.interimResults = false;
-        recognitionRef.current.lang = 'en-US';
-
-        recognitionRef.current.onresult = (event: any) => {
-          const transcript = event.results[0][0].transcript;
-          console.log('Voice input received:', transcript);
-          setUserQuery(transcript);
-          setIsListening(false);
-          
-          // Stop any ongoing speech
-          if (speechHandlerRef.current) {
-            speechHandlerRef.current.stop();
-          }
-          
-          // Process the query immediately in an async IIFE
-          setIsThinking(true);
-          
-          (async () => {
-            await new Promise(resolve => setTimeout(resolve, 300));
-            
-            try {
-              console.log('Processing voice query:', transcript);
-              const response: AIResponse = await aiAssistant.handleQuery(transcript);
-              
-              console.log('AI Response:', response);
-              setIsThinking(false);
-
-              if (response.suggestions) {
-                setSuggestions(response.suggestions);
-              }
-
-              // Handle external links IMMEDIATELY to avoid popup blocker
-              if (response.action?.type === 'external') {
-                console.log('Opening external URL immediately:', response.action.target);
-                const opened = window.open(response.action.target, '_blank', 'noopener,noreferrer');
-                if (!opened || opened.closed || typeof opened.closed === 'undefined') {
-                  console.warn('Popup blocked! Showing clickable link');
-                  setBlockedUrl(response.action.target);
-                  setTimeout(() => setBlockedUrl(null), 8000); // Clear after 8 seconds
-                }
-              }
-
-              // Speak the response
-              speakText(response.text);
-
-              // Handle scroll actions with delay
-              if (response.action?.type === 'scroll') {
-                console.log('Scrolling to:', response.action.target);
-                setTimeout(() => {
-                  const element = document.getElementById(response.action!.target);
-                  console.log('Scroll element:', element);
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
-                }, 300);
-              }
-              
-              // Clear the query after processing
-              setTimeout(() => setUserQuery(""), 500);
-            } catch (error) {
-              console.error('AI Assistant error:', error);
-              setIsThinking(false);
-              speakText("Sorry, I encountered an error. Please try again!");
-              setUserQuery("");
-            }
-          })();
-        };
-
-        recognitionRef.current.onerror = (event: any) => {
-          console.error('Speech recognition error:', event.error);
-          setIsListening(false);
-          if (event.error === 'not-allowed') {
-            speakText("Please allow microphone access to use voice input.");
-          }
-        };
-
-        recognitionRef.current.onend = () => {
-          setIsListening(false);
-        };
-      }
-    }
 
     return () => {
       if (speechHandlerRef.current) {
@@ -139,9 +48,6 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
       }
       if (amplitudeIntervalRef.current) {
         clearInterval(amplitudeIntervalRef.current);
-      }
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
       }
     };
   }, []);
@@ -200,28 +106,23 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
     setActiveTopic(topic);
 
     let script = "";
-    let scrollTarget = "";
 
     switch (topic) {
       case "story":
         script =
           "Hi, I’m Sameer Das, a software developer with experience in full-stack web development and deployment. I work with technologies such as JavaScript, Node.js, Next.js, PHP, MySQL, Redis, Git, AWS, Linux, and PM2. I’m particularly interested in building real-time applications, cloud deployment, CI/CD, and improving application performance and scalability. I’m also continuously learning technologies like Docker, AWS, and DevOps to strengthen my development and deployment skills.";
-        scrollTarget = "about";
         break;
       case "stack":
         script =
           "My core stack includes JavaScript, Node.js, Next.js, PHP, MySQL, Redis, Git, AWS, Linux, and PM2, with hands-on focus on Docker, DevOps, and scalable architectures.";
-        scrollTarget = "about";
         break;
       case "projects":
         script =
           "I've built featured full-stack applications with real-time performance and solid cloud deployments. Feel free to explore the Projects section below!";
-        scrollTarget = "projects";
         break;
       case "hire":
         script =
           "I'm open for software development roles, freelance projects, and DevOps opportunities. Feel free to reach out via the contact section below!";
-        scrollTarget = "contact";
         break;
       default:
         script =
@@ -230,93 +131,59 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
     }
 
     speakText(script);
-
-    // Scroll to the relevant section
-    if (scrollTarget) {
-      setTimeout(() => {
-        const element = document.getElementById(scrollTarget);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 1000);
-    }
   };
 
-  const handleAskQuestion = async (e: React.FormEvent) => {
+  const handleAskQuestion = (e: React.FormEvent) => {
     e.preventDefault();
     if (!userQuery.trim()) return;
 
     setIsThinking(true);
-    const q = userQuery.trim();
+    const q = userQuery.toLowerCase().trim();
+    let reply = "";
 
-    try {
-      const response: AIResponse = await aiAssistant.handleQuery(q);
-      
-      setTimeout(() => {
-        setIsThinking(false);
-        setUserQuery("");
-
-        if (response.suggestions) {
-          setSuggestions(response.suggestions);
-        }
-
-        // Handle external links IMMEDIATELY to avoid popup blocker
-        if (response.action?.type === 'external') {
-          console.log('Opening external URL immediately (typed):', response.action.target);
-          const opened = window.open(response.action.target, '_blank', 'noopener,noreferrer');
-          if (!opened || opened.closed || typeof opened.closed === 'undefined') {
-            console.warn('Popup blocked! Showing clickable link');
-            setBlockedUrl(response.action.target);
-            setTimeout(() => setBlockedUrl(null), 8000); // Clear after 8 seconds
-          }
-        }
-
-        // Speak the response
-        speakText(response.text);
-
-        // Handle scroll actions with delay
-        if (response.action?.type === 'scroll') {
-          console.log('Scrolling to (typed):', response.action.target);
-          setTimeout(() => {
-            const element = document.getElementById(response.action!.target);
-            console.log('Scroll element:', element);
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          }, 300);
-        }
-      }, 350);
-    } catch (error) {
-      console.error('AI Assistant error:', error);
-      setIsThinking(false);
-      speakText("Sorry, I encountered an error. Please try again!");
-      setUserQuery("");
-    }
-  };
-
-  const handleVoiceInput = (e?: React.MouseEvent) => {
-    if (e) e.preventDefault();
-    
-    if (!recognitionRef.current) {
-      speakText("Sorry, voice recognition is not supported in your browser. Please try Chrome or Edge.");
-      return;
-    }
-
-    if (isListening) {
-      recognitionRef.current.stop();
-      setIsListening(false);
+    if (
+      q.includes("who are you") ||
+      q.includes("who is sameer") ||
+      q.includes("who is sam") ||
+      q.includes("name") ||
+      q.includes("about you")
+    ) {
+      reply =
+        "Hi, I’m Sameer Das, a software developer with experience in full-stack web development and deployment across JavaScript, Node.js, Next.js, PHP, MySQL, Redis, AWS, and Linux.";
+    } else if (q.includes("project") || q.includes("work") || q.includes("portfolio")) {
+      reply =
+        "Sameer has built robust full-stack applications, with real-time capabilities and seamless cloud deployments.";
+    } else if (
+      q.includes("skill") ||
+      q.includes("tech") ||
+      q.includes("stack") ||
+      q.includes("language") ||
+      q.includes("devops")
+    ) {
+      reply =
+        "Sameer works with JavaScript, Node.js, Next.js, PHP, MySQL, Redis, Git, AWS, Linux, PM2, and is actively learning Docker and DevOps.";
+    } else if (
+      q.includes("hire") ||
+      q.includes("contact") ||
+      q.includes("email") ||
+      q.includes("freelance") ||
+      q.includes("available")
+    ) {
+      reply =
+        "Sameer is currently open for development roles, freelance opportunities, and collaborative engineering projects. Send a message below!";
+    } else if (q.includes("hi") || q.includes("hello") || q.includes("hey")) {
+      reply =
+        "Hey! Great to meet you. Feel free to click 'My Story' to hear about my background or ask me any question!";
     } else {
-      try {
-        setUserQuery(""); // Clear any existing query
-        recognitionRef.current.start();
-        setIsListening(true);
-        speakText("Listening... Speak your question now!");
-      } catch (error) {
-        console.error('Error starting recognition:', error);
-        setIsListening(false);
-        speakText("Could not start voice recognition. Please try again.");
-      }
+      reply =
+        "Thanks for asking! As a software developer, I specialize in full-stack development, cloud deployment, and real-time systems. Explore my projects below or get in touch!";
     }
+
+    setTimeout(() => {
+      setIsThinking(false);
+      speakText(reply);
+      setUserQuery("");
+    }, 250);
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -335,40 +202,6 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
 
   return (
     <div className="w-full">
-      {/* Popup Blocked Banner */}
-      <AnimatePresence>
-        {blockedUrl && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="mb-3 p-3 rounded-xl bg-orange-500/20 border border-orange-500/50 backdrop-blur-sm"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex-1">
-                <p className="text-white text-sm font-semibold mb-1">🚫 Popup Blocked!</p>
-                <p className="text-xs text-gray-300">Click below to open the link:</p>
-              </div>
-              <button
-                onClick={() => setBlockedUrl(null)}
-                className="text-white/70 hover:text-white text-lg"
-              >
-                ✕
-              </button>
-            </div>
-            <a
-              href={blockedUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 block px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold text-center transition-colors"
-              onClick={() => setBlockedUrl(null)}
-            >
-              Open Link →
-            </a>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <div className="glass rounded-3xl p-4 sm:p-5 border border-white/10 shadow-2xl relative overflow-hidden bg-[var(--color-dark-900)]/85 backdrop-blur-xl">
         <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/10">
           <div className="flex items-center gap-2">
@@ -614,38 +447,23 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
           </div>
         </div>
 
-        <form id="ai-chat-form" onSubmit={handleAskQuestion} className="mt-2.5 flex gap-2">
-          <button
-            type="button"
-            onClick={handleVoiceInput}
-            disabled={isThinking}
-            className={`px-3 py-2 rounded-xl text-lg transition-all duration-300 disabled:opacity-50 flex items-center justify-center shadow-md ${
-              isListening
-                ? 'bg-red-500 hover:bg-red-600 animate-pulse'
-                : 'glass border border-white/10 hover:border-[var(--accent-pink)]'
-            }`}
-            title={isListening ? "Stop listening" : "Click to speak your question"}
-          >
-            {isListening ? '🔴' : '🎤'}
-          </button>
-          
+        <form onSubmit={handleAskQuestion} className="mt-2.5 flex gap-2">
           <input
             type="text"
             value={userQuery}
             onChange={(e) => setUserQuery(e.target.value)}
-            placeholder={isListening ? "Listening..." : "Ask Sameer anything or use voice..."}
+            placeholder="Ask Sameer anything..."
             className="flex-1 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-[var(--accent-pink)] placeholder-gray-500 transition-colors"
-            disabled={isListening}
           />
           <button
             type="submit"
-            disabled={!userQuery.trim() || isThinking || isListening}
+            disabled={!userQuery.trim() || isThinking}
             className="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-white transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-1 shadow-md hover:shadow-[0_0_15px_rgba(255,31,143,0.4)]"
             style={{
               background: "linear-gradient(135deg, var(--accent-pink), var(--electric-purple))",
             }}
           >
-            <span>{isThinking ? 'Thinking...' : 'Ask'}</span>
+            <span>Ask</span>
             <span>↵</span>
           </button>
         </form>

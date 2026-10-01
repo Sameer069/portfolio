@@ -56,8 +56,12 @@ A premium, cinematic portfolio website built with Next.js 16, React Three Fiber,
 ### Prerequisites
 - Node.js 18+ and npm/yarn/pnpm
 - Git
+- Modern browser with WebGL support
 
 ### Steps
+
+**⚠️ Having issues with white screen? See [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)**
+
 
 1. **Clone the repository**
 ```bash

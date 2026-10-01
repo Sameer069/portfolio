@@ -19,13 +19,29 @@ export default function ProjectModal({
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
+      // Save current scroll position
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = "unset";
+      // Restore scroll position
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
     }
 
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
     };
   }, [isOpen]);
 
@@ -52,7 +68,7 @@ export default function ProjectModal({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8"
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-6"
           initial="hidden"
           animate="visible"
           exit="exit"
@@ -67,22 +83,39 @@ export default function ProjectModal({
           {/* Modal Content */}
           <motion.div
             variants={modalVariants}
-            className="relative w-full max-w-5xl max-h-[90vh] glass rounded-3xl overflow-hidden"
+            className="relative w-full max-w-5xl h-[90vh] glass rounded-2xl md:rounded-3xl overflow-hidden flex flex-col touch-none"
             onClick={(e) => e.stopPropagation()}
+            style={{ touchAction: 'none' }}
           >
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-6 right-6 z-10 w-12 h-12 glass rounded-full flex items-center justify-center hover:shadow-[0_0_20px_rgba(0,212,255,0.5)] transition-all group"
+              className="absolute top-4 right-4 md:top-6 md:right-6 z-50 w-10 h-10 md:w-12 md:h-12 glass rounded-full flex items-center justify-center hover:shadow-[0_0_20px_rgba(255,31,143,0.5)] transition-all group"
               aria-label="Close modal"
             >
-              <span className="text-2xl group-hover:rotate-90 transition-transform">
+              <span className="text-xl md:text-2xl group-hover:rotate-90 transition-transform">
                 ✕
               </span>
             </button>
 
             {/* Scrollable Content */}
-            <div className="overflow-y-auto max-h-[90vh] custom-scrollbar">
+            <div 
+              className="overflow-y-auto overflow-x-hidden h-full custom-scrollbar"
+              style={{
+                scrollbarWidth: 'thin',
+                scrollbarColor: '#ff1f8f #1a1a2e',
+                overscrollBehavior: 'contain',
+                touchAction: 'pan-y'
+              }}
+              onWheel={(e) => {
+                // Prevent scroll propagation to parent
+                e.stopPropagation();
+              }}
+              onTouchMove={(e) => {
+                // Allow touch scrolling on the modal content
+                e.stopPropagation();
+              }}
+            >
               {/* Hero Image */}
               <div className="relative h-64 md:h-96 overflow-hidden bg-gradient-to-br from-[var(--electric-blue)] to-[var(--electric-purple)]">
                 {project.image ? (
