@@ -13,21 +13,31 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [isComplete, setIsComplete] = useState(false);
   const [displayProgress, setDisplayProgress] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
+  const [minLoadTime, setMinLoadTime] = useState(false);
 
   useEffect(() => {
     // Mark component as mounted
     setIsMounted(true);
+    
+    // Ensure minimum load time of 1 second for smoother experience
+    const timer = setTimeout(() => {
+      setMinLoadTime(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    // Smooth progress animation
+    // Smooth progress animation with minimum starting value
     const interval = setInterval(() => {
       setDisplayProgress((prev) => {
-        const diff = progress - prev;
+        // Start from 10% instead of 0% for better UX
+        const targetProgress = Math.max(10, progress);
+        const diff = targetProgress - prev;
         if (Math.abs(diff) < 0.1) {
-          return progress;
+          return targetProgress;
         }
-        return prev + diff * 0.1;
+        return prev + diff * 0.15;
       });
     }, 16);
 
@@ -35,18 +45,19 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   }, [progress]);
 
   useEffect(() => {
-    if (!active && progress >= 100) {
+    // Complete when both progress is done AND minimum time has passed
+    if (minLoadTime && (!active && progress >= 100 || progress >= 99)) {
       // Add small delay before completing
       const timer = setTimeout(() => {
         setIsComplete(true);
         if (onComplete) {
           setTimeout(onComplete, 600);
         }
-      }, 500);
+      }, 300);
 
       return () => clearTimeout(timer);
     }
-  }, [active, progress, onComplete]);
+  }, [active, progress, onComplete, minLoadTime]);
 
   return (
     <AnimatePresence>

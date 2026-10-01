@@ -474,6 +474,13 @@ export default function AIAvatarStudio({ mousePosition }: AIAvatarStudioProps) {
                     className={`w-full h-full object-cover transition-all duration-700 ${
                       isSpeaking ? "scale-105 contrast-110" : "group-hover:scale-105"
                     }`}
+                    onError={(e) => {
+                      console.error('Avatar image failed to load');
+                      // Fallback to a gradient if image fails
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.parentElement!.style.background = 'linear-gradient(135deg, #ff1f8f, #6b1fb0)';
+                    }}
+                    loading="eager"
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />

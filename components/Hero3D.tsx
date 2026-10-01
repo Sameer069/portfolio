@@ -28,9 +28,18 @@ const FloatingShapes = dynamic(() => import("./FloatingShapes"), { ssr: false })
 export default function Hero3D() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMounted, setIsMounted] = useState(false);
+  const [is3DSupported, setIs3DSupported] = useState(true);
 
   useEffect(() => {
     setIsMounted(true);
+    
+    // Check if WebGL is supported
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) {
+      setIs3DSupported(false);
+      console.warn('WebGL not supported, disabling 3D features');
+    }
   }, []);
 
   useEffect(() => {
@@ -62,19 +71,39 @@ export default function Hero3D() {
       id="hero"
       className="relative w-full min-h-screen overflow-hidden"
     >
-      {isMounted && (
+      {isMounted && is3DSupported && (
         <div className="absolute inset-0 z-0">
-          <Canvas>
+          <Canvas
+            gl={{ 
+              antialias: true, 
+              alpha: true,
+              powerPreference: "high-performance"
+            }}
+            dpr={[1, 2]} // Limit DPR for better mobile performance
+            onCreated={({ gl }) => {
+              gl.setClearColor('#0a0014', 1);
+            }}
+          >
             <PerspectiveCamera makeDefault position={[0, 0, 5]} />
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 5]} intensity={1} />
             <pointLight position={[-10, -10, -5]} color="#6b1fb0" intensity={0.5} />
             <Suspense fallback={null}>
-              <ParticleField mousePosition={mousePosition} count={2000} />
-              <FloatingShapes mousePosition={mousePosition} count={15} />
+              <ParticleField mousePosition={mousePosition} count={isMounted && window.innerWidth < 768 ? 1000 : 2000} />
+              <FloatingShapes mousePosition={mousePosition} count={isMounted && window.innerWidth < 768 ? 8 : 15} />
             <Environment preset="city" />
             </Suspense>
           </Canvas>
+        </div>
+      )}
+      
+      {/* Fallback background for unsupported devices */}
+      {(!isMounted || !is3DSupported) && (
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#0a0014] via-[#1a0028] to-[#0a0014]">
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl bg-[var(--accent-pink)]" />
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-3xl bg-[var(--electric-purple)]" />
+          </div>
         </div>
       )}
 
