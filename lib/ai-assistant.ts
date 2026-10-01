@@ -14,6 +14,8 @@ interface KnowledgeBase {
     email: string;
     location: string;
     availability: string;
+    github: string;
+    linkedin: string;
   };
 }
 
