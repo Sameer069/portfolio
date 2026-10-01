@@ -7,11 +7,17 @@ import * as THREE from "three";
 
 interface Rotating3DObjectProps {
   scrollProgress: number;
+  isMobile?: boolean;
 }
 
-export default function Rotating3DObject({ scrollProgress }: Rotating3DObjectProps) {
+export default function Rotating3DObject({ scrollProgress, isMobile = false }: Rotating3DObjectProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const groupRef = useRef<THREE.Group>(null);
+  
+  // Use lower detail geometry on mobile
+  const detail = isMobile ? 0 : 1;
+  const particleCount = isMobile ? 4 : 8;
+  const sphereSegments = isMobile ? 8 : 16;
 
   useFrame((state, delta) => {
     if (!meshRef.current || !groupRef.current) return;
@@ -31,8 +37,8 @@ export default function Rotating3DObject({ scrollProgress }: Rotating3DObjectPro
   return (
     <group ref={groupRef}>
       <mesh ref={meshRef}>
-        {/* Icosahedron geometry for a tech look */}
-        <icosahedronGeometry args={[1.5, 1]} />
+        {/* Icosahedron geometry - lower detail on mobile */}
+        <icosahedronGeometry args={[1.5, detail]} />
         <meshStandardMaterial
           color="#ffffff"
           wireframe
@@ -55,9 +61,9 @@ export default function Rotating3DObject({ scrollProgress }: Rotating3DObjectPro
         />
       </mesh>
 
-      {/* Orbiting particles */}
-      {Array.from({ length: 8 }).map((_, i) => {
-        const angle = (i / 8) * Math.PI * 2;
+      {/* Orbiting particles - fewer on mobile */}
+      {Array.from({ length: particleCount }).map((_, i) => {
+        const angle = (i / particleCount) * Math.PI * 2;
         const radius = 2.5;
         return (
           <mesh
@@ -68,7 +74,7 @@ export default function Rotating3DObject({ scrollProgress }: Rotating3DObjectPro
               Math.sin(angle + scrollProgress * Math.PI * 2) * radius,
             ]}
           >
-            <sphereGeometry args={[0.1, 16, 16]} />
+            <sphereGeometry args={[0.1, sphereSegments, sphereSegments]} />
             <meshStandardMaterial
               color={i % 2 === 0 ? "#ff1f8f" : "#6b1fb0"}
               emissive={i % 2 === 0 ? "#ff1f8f" : "#6b1fb0"}
@@ -79,7 +85,7 @@ export default function Rotating3DObject({ scrollProgress }: Rotating3DObjectPro
       })}
 
       {/* Point lights for glow */}
-      <pointLight position={[0, 0, 0]} color="#ff1f8f" intensity={1} distance={5} />
+      {!isMobile && <pointLight position={[0, 0, 0]} color="#ff1f8f" intensity={1} distance={5} />}
     </group>
   );
 }

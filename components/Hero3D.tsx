@@ -29,9 +29,17 @@ export default function Hero3D() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMounted, setIsMounted] = useState(false);
   const [is3DSupported, setIs3DSupported] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+    
+    // Check if device is mobile
+    const checkMobile = () => {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+        || window.innerWidth < 768;
+    };
+    setIsMobile(checkMobile());
     
     // Check if WebGL is supported
     const canvas = document.createElement('canvas');
@@ -75,34 +83,77 @@ export default function Hero3D() {
         <div className="absolute inset-0 z-0">
           <Canvas
             gl={{ 
-              antialias: true, 
+              antialias: !isMobile, // Disable antialiasing on mobile
               alpha: true,
-              powerPreference: "high-performance"
+              powerPreference: isMobile ? "low-power" : "high-performance"
             }}
-            dpr={[1, 2]} // Limit DPR for better mobile performance
+            dpr={isMobile ? 1 : Math.min(window.devicePixelRatio, 2)} // Lower resolution on mobile
             onCreated={({ gl }) => {
               gl.setClearColor('#0a0014', 1);
             }}
           >
             <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 5]} intensity={1} />
-            <pointLight position={[-10, -10, -5]} color="#6b1fb0" intensity={0.5} />
+            <ambientLight intensity={isMobile ? 0.8 : 0.5} />
+            {!isMobile && <directionalLight position={[10, 10, 5]} intensity={1} />}
+            {!isMobile && <pointLight position={[-10, -10, -5]} color="#6b1fb0" intensity={0.5} />}
             <Suspense fallback={null}>
-              <ParticleField mousePosition={mousePosition} count={isMounted && window.innerWidth < 768 ? 1000 : 2000} />
-              <FloatingShapes mousePosition={mousePosition} count={isMounted && window.innerWidth < 768 ? 8 : 15} />
-            <Environment preset="city" />
+              {/* Reduced particles on mobile: 500 vs 2000 */}
+              <ParticleField mousePosition={mousePosition} count={isMobile ? 500 : 2000} />
+              {/* Fewer shapes on mobile: 5 vs 15 */}
+              <FloatingShapes mousePosition={mousePosition} count={isMobile ? 5 : 15} />
+              {/* No environment preset on mobile to save performance */}
+              {!isMobile && <Environment preset="city" />}
             </Suspense>
           </Canvas>
         </div>
       )}
       
-      {/* Fallback background for unsupported devices */}
+      {/* Fallback background for unsupported devices only */}
       {(!isMounted || !is3DSupported) && (
-        <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#0a0014] via-[#1a0028] to-[#0a0014]">
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl bg-[var(--accent-pink)]" />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-3xl bg-[var(--electric-purple)]" />
+        <div className="absolute inset-0 z-0">
+          {/* Animated gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0014] via-[#1a0028] to-[#0a0014]">
+            {/* Animated blobs */}
+            <div className="absolute inset-0 opacity-30">
+              <div 
+                className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl animate-pulse"
+                style={{
+                  background: 'radial-gradient(circle, var(--accent-pink) 0%, transparent 70%)',
+                  animation: 'float 8s ease-in-out infinite'
+                }}
+              />
+              <div 
+                className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-3xl animate-pulse"
+                style={{
+                  background: 'radial-gradient(circle, var(--electric-purple) 0%, transparent 70%)',
+                  animation: 'float 10s ease-in-out infinite reverse',
+                  animationDelay: '2s'
+                }}
+              />
+              <div 
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full blur-3xl"
+                style={{
+                  background: 'radial-gradient(circle, #d946ef 0%, transparent 70%)',
+                  animation: 'float 12s ease-in-out infinite',
+                  animationDelay: '4s'
+                }}
+              />
+            </div>
+            
+            {/* Particle effect overlay */}
+            <div className="absolute inset-0 opacity-20" 
+              style={{
+                backgroundImage: `radial-gradient(2px 2px at 20% 30%, white, transparent),
+                                 radial-gradient(2px 2px at 60% 70%, white, transparent),
+                                 radial-gradient(1px 1px at 50% 50%, white, transparent),
+                                 radial-gradient(1px 1px at 80% 10%, white, transparent),
+                                 radial-gradient(2px 2px at 90% 60%, white, transparent),
+                                 radial-gradient(1px 1px at 33% 85%, white, transparent),
+                                 radial-gradient(2px 2px at 75% 25%, white, transparent)`,
+                backgroundSize: '200% 200%',
+                backgroundPosition: '0% 0%'
+              }}
+            />
           </div>
         </div>
       )}

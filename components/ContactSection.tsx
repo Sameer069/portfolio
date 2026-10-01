@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PerspectiveCamera, Environment } from "@react-three/drei";
 import { motion } from "framer-motion";
@@ -15,21 +15,38 @@ const socialLinks = [
 ];
 
 export default function ContactSection() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Detect mobile device
+    const checkMobile = () => {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+        || window.innerWidth < 768;
+    };
+    setIsMobile(checkMobile());
+  }, []);
+
   return (
     <section
       id="contact"
       className="relative min-h-screen py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden"
     >
-      {/* 3D Background */}
+      {/* 3D Background - Lightweight on mobile */}
       <div className="absolute inset-0 z-0 opacity-40">
-        <Canvas>
+        <Canvas
+          gl={{
+            antialias: !isMobile,
+            powerPreference: isMobile ? "low-power" : "high-performance"
+          }}
+          dpr={isMobile ? 1 : Math.min(window.devicePixelRatio, 2)}
+        >
           <PerspectiveCamera makeDefault position={[0, 0, 8]} />
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[10, 10, 5]} intensity={1} />
+          <ambientLight intensity={isMobile ? 0.8 : 0.5} />
+          {!isMobile && <directionalLight position={[10, 10, 5]} intensity={1} />}
           
           <Suspense fallback={null}>
-            <DistortedSphere />
-            <Environment preset="night" />
+            <DistortedSphere isMobile={isMobile} />
+            {!isMobile && <Environment preset="night" />}
           </Suspense>
         </Canvas>
       </div>

@@ -13,8 +13,18 @@ import aboutData from "@/data/about.json";
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const { bio, skills, timeline, technologies } = aboutData;
+
+  useEffect(() => {
+    // Detect mobile device
+    const checkMobile = () => {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+        || window.innerWidth < 768;
+    };
+    setIsMobile(checkMobile());
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,7 +124,7 @@ export default function AboutSection() {
             </motion.div>
           </motion.div>
 
-          {/* Right: 3D Object */}
+          {/* Right: 3D Object - Lightweight on mobile */}
           <motion.div
             variants={fadeInLeft}
             initial="hidden"
@@ -122,14 +132,20 @@ export default function AboutSection() {
             viewport={{ once: true, amount: 0.3 }}
             className="h-64 sm:h-80 md:h-96 lg:h-[500px] relative"
           >
-            <Canvas>
+            <Canvas
+              gl={{
+                antialias: !isMobile,
+                powerPreference: isMobile ? "low-power" : "high-performance"
+              }}
+              dpr={isMobile ? 1 : Math.min(window.devicePixelRatio, 2)}
+            >
               <PerspectiveCamera makeDefault position={[0, 0, 8]} />
-              <ambientLight intensity={0.5} />
-              <directionalLight position={[10, 10, 5]} intensity={1} />
+              <ambientLight intensity={isMobile ? 0.8 : 0.5} />
+              {!isMobile && <directionalLight position={[10, 10, 5]} intensity={1} />}
               
               <Suspense fallback={null}>
-                <Rotating3DObject scrollProgress={scrollProgress} />
-                <Environment preset="city" />
+                <Rotating3DObject scrollProgress={scrollProgress} isMobile={isMobile} />
+                {!isMobile && <Environment preset="city" />}
               </Suspense>
             </Canvas>
           </motion.div>

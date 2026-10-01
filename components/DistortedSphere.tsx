@@ -5,8 +5,15 @@ import { useFrame } from "@react-three/fiber";
 import { MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
 
-export default function DistortedSphere() {
+interface DistortedSphereProps {
+  isMobile?: boolean;
+}
+
+export default function DistortedSphere({ isMobile = false }: DistortedSphereProps) {
   const meshRef = useRef<THREE.Mesh>(null);
+  
+  // Lower geometry segments on mobile
+  const segments = isMobile ? 32 : 64;
 
   useFrame((state) => {
     if (!meshRef.current) return;
@@ -22,12 +29,12 @@ export default function DistortedSphere() {
 
   return (
     <mesh ref={meshRef}>
-      <sphereGeometry args={[2, 64, 64]} />
+      <sphereGeometry args={[2, segments, segments]} />
       <MeshDistortMaterial
         color="#ff1f8f"
         attach="material"
-        distort={0.6}
-        speed={2}
+        distort={isMobile ? 0.4 : 0.6} // Less distortion on mobile
+        speed={isMobile ? 1.5 : 2}
         roughness={0.2}
         metalness={0.8}
         emissive="#6b1fb0"
@@ -36,16 +43,18 @@ export default function DistortedSphere() {
         opacity={0.8}
       />
       
-      {/* Inner glow */}
-      <mesh scale={0.95}>
-        <sphereGeometry args={[2, 64, 64]} />
-        <meshBasicMaterial
-          color="#d946ef"
-          transparent
-          opacity={0.3}
-          side={THREE.BackSide}
-        />
-      </mesh>
+      {/* Inner glow - skip on mobile for performance */}
+      {!isMobile && (
+        <mesh scale={0.95}>
+          <sphereGeometry args={[2, segments, segments]} />
+          <meshBasicMaterial
+            color="#d946ef"
+            transparent
+            opacity={0.3}
+            side={THREE.BackSide}
+          />
+        </mesh>
+      )}
     </mesh>
   );
 }
